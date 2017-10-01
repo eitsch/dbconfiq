@@ -15,7 +15,7 @@ public class PixelOffset {
 	final public static String KEY = "PixelOffset";
 	final public static String KEY_X = "X";
 	final public static String KEY_Y = "Y";
-	
+
 	private BigDecimal x;
 	private BigDecimal y;
 
@@ -24,31 +24,42 @@ public class PixelOffset {
 		this.x = x;
 		this.y = y;
 	}
+
 	public PixelOffset() {
 	}
+
 	public BigDecimal getX() {
 		return x;
 	}
+
 	public void setX(BigDecimal x) {
 		this.x = x;
 	}
+
 	public BigDecimal getY() {
 		return y;
 	}
+
 	public void setY(BigDecimal y) {
 		this.y = y;
 	}
-	
-	public static PixelOffset fromString(String value){
+
+	/**
+	 * parses supplied String and extracts PixelOffset-Data
+	 * 
+	 * @param value
+	 *            supplied ini-line-string-value
+	 * @return PixelOffset containing supplied data
+	 */
+	public static PixelOffset fromString(String value) {
 		PixelOffset px = null;
-		if(value.contains(PixelOffset.KEY)){
+		if (value.contains(PixelOffset.KEY)) {
 			px = new PixelOffset();
 			int start = value.indexOf(PixelOffset.KEY + "=") + PixelOffset.KEY.length() + 2;
 			int end = value.indexOf(")", start);
 			String cut = value.substring(start, end);
 			log.debug(String.format("startpos: %s, endpos: %s, substring: %s", start, end, cut));
-			
-		
+
 			String[] split = cut.split(",");
 			if (null != split && split.length > 0) {
 				for (String string : split) {
@@ -72,7 +83,7 @@ public class PixelOffset {
 		}
 		return px;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -81,7 +92,7 @@ public class PixelOffset {
 		result = prime * result + y.intValue();
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

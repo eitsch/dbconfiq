@@ -44,6 +44,11 @@ public class Align {
 		this.vertical = vertical;
 	}
 
+	/**
+	 * parses supplied String and extracts Align-Data
+	 * @param value supplied ini-line-string-value
+	 * @return Align containing supplied data
+	 */
 	public static Align fromString(String value) {
 		Align att = null;
 		if (value.contains(Align.KEY)) {

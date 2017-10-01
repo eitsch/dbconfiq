@@ -21,7 +21,7 @@ public class HUDElementTest extends HudElement {
 	public void testToString_All_Elements_Set() {
 		HudElement element = 
 				new HudElement()
-					.setElement(SGUIHUDPlayer.SpectatorChatInputPosition)
+					.setElementType(SGUIHUDPlayer.SpectatorChatInputPosition)
 					.setAlign(new Align(Orientation.LEFT, Orientation.TOP))
 					.setAttach(new Attach(Orientation.LEFT, Orientation.BOTTOM, "ConsoleMessageLog", "ConsoleMessageLog"))
 					.setPixelOffset(new PixelOffset(null, new BigDecimal(-1)))

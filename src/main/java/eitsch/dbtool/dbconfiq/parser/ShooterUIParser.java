@@ -40,7 +40,7 @@ public class ShooterUIParser implements ConfigParser {
 			// br returns as stream and convert it into a List
 			iniLines = br.lines().collect(Collectors.toList());
 		} catch (IOException | SecurityException e) {
-			e.printStackTrace();
+			log.error("error parsing ini-file", e);
 		}
 		
 		this.hudElementsMappedByEnum.clear();
@@ -55,31 +55,21 @@ public class ShooterUIParser implements ConfigParser {
 	private Map<SGUIHUDPlayer, HudElement> parseSGUIHUDPlayer(List<String> iniLines) {
 		Map<String, String> entryMap = new HashMap<>();
 		Map<SGUIHUDPlayer, HudElement> elementMap = new HashMap<>();
-		boolean toBeParsed = false;
+		boolean inIniSection = false;
 
 		for (String line : iniLines) {
-			if (!toBeParsed && "[ShooterGame.SGUIHUDPlayer]".equalsIgnoreCase(line)) {
-				toBeParsed = true;
-			} else if (toBeParsed && line.startsWith("[")) {
-				toBeParsed = false;
+			if (!inIniSection && "[ShooterGame.SGUIHUDPlayer]".equalsIgnoreCase(line)) { // start of section
+				inIniSection = true;
+			} else if (inIniSection && line.startsWith("[")) { // reached start of next section
+				inIniSection = false;
 			}
 
-			if (toBeParsed && !line.startsWith("[") && !line.isEmpty()) {
-				int keyValueSeparator = line.indexOf("=");
-				String key = line.substring(0, keyValueSeparator);
-				String value = line.substring(keyValueSeparator + 1, line.length());
-
-				entryMap.put(key, value);
-				SGUIHUDPlayer elementType = null;
-				try {
-					elementType = SGUIHUDPlayer.valueOf(key);
-				} catch (Exception e) {
-				}
+			if (inIniSection && !line.startsWith("[") && !line.isEmpty()) { // we do not want to parse the start of the section 
+				HudElement element = HudElement.fromIniLine(line);
 				
-				if(null != elementType && ConfigType.HUD_ELEMENT == elementType.type) {
-					log.info(String.format("Is HUD Element: %s -- %s", elementType, value));
-					HudElement element = HudElement.fromIniLine(line);
-					elementMap.put(elementType, element);
+				if(null != element.getElementType() && element.getElementType().type == ConfigType.HUD_ELEMENT) {
+					log.info(String.format("%s -- %s", element.getElementType(), element.toIniLine()));
+					elementMap.put(element.getElementType(), element);
 				}
 			}
 		}

@@ -1,14 +1,21 @@
 package eitsch.dbtool.dbconfiq.model;
 
+import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import eitsch.dbtool.dbconfiq.enums.SGUIHUDPlayer;
 
+/**
+ * A HudElement represents the data of a single line of the Section <b>ShooterGame.SGUIHUDPlayer</b> found in ini-file <b>ShooterUI.ini</b>
+ *  
+ * @author eitsch
+ *
+ */
 public class HudElement {
 	
-	private SGUIHUDPlayer element;
+	private SGUIHUDPlayer elementType;
 	private Align align;
 	private Attach attach;
 	private PixelOffset pixelOffset;
@@ -20,19 +27,19 @@ public class HudElement {
 	
 	public HudElement(SGUIHUDPlayer element, Align align, Attach attach, PixelOffset pixelOffset, ShadowOffset shadowOffset) {
 		super();
-		this.element = element;
+		this.elementType = element;
 		this.align = align;
 		this.attach = attach;
 		this.pixelOffset = pixelOffset;
 		this.shadowOffset = shadowOffset;
 	}
 
-	public SGUIHUDPlayer getElement() {
-		return element;
+	public SGUIHUDPlayer getElementType() {
+		return elementType;
 	}
 
-	public HudElement setElement(SGUIHUDPlayer element) {
-		this.element = element;
+	public HudElement setElementType(SGUIHUDPlayer elementType) {
+		this.elementType = elementType;
 		return this;
 	}
 
@@ -74,34 +81,29 @@ public class HudElement {
 
 	@Override
 	public String toString() {
-		return "HudElement [element=" + element + ", align=" + align + ", attach=" + attach + ", pixelOffset="
+		return "HudElement [elementType=" + elementType + ", align=" + align + ", attach=" + attach + ", pixelOffset="
 				+ pixelOffset + ", shadowOffset=" + shadowOffset + "]";
 	}
 	
+	/**
+	 * parses each relevant ini-config-line. Creates a HudElement containing objectified Configdata
+	 * @param iniLine single line of ini-configfile.
+	 * @return HudElement containing the config-lines settings
+	 */
 	public static HudElement fromIniLine(String iniLine){
-		HudElement element = new HudElement();
-		int keyValueSeparator = iniLine.indexOf("=");
-		String key = iniLine.substring(0, keyValueSeparator);
-		element.setElement(SGUIHUDPlayer.valueOf(key));
 		
-		String value = iniLine.substring(keyValueSeparator + 1, iniLine.length());
 		
-		if(value.startsWith("(") && value.endsWith(")")){
-			value = value.substring(1, value.length());
-		}
-		
-		element.setAlign(Align.fromString(value));
-		element.setAttach(Attach.fromString(value));
-		element.setPixelOffset(PixelOffset.fromString(value));
-		element.setShadowOffset(ShadowOffset.fromString(value));
-		
-		return element;
+		return HudElementFactory.createElement(iniLine);
 	}
 	
+	/**
+	 * creates a String in the format of the ini-config-file. Can be used to replace an existing line.<br>
+	 * @return String with the HudElements data presented in config-file-format 
+	 */
 	public String toIniLine(){
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(this.element.name() + "=(");
+		sb.append(this.elementType.name() + "=(");
 
 		List<String> contentList = new ArrayList<>();
 		if (null != align) {

@@ -11,13 +11,13 @@ import eitsch.dbtool.dbconfiq.enums.Orientation;
 
 public class Attach {
 	private static final Logger log = LoggerFactory.getLogger(Attach.class);
-	
+
 	final public static String KEY = "Attach";
 	final public static String KEY_HORIZONTAL = "H";
 	final public static String KEY_VERTICAL = "V";
 	final public static String KEY_VA = "VA";
 	final public static String KEY_HA = "HA";
-	
+
 	private Orientation horizontal;
 	private Orientation vertical;
 	private String va;
@@ -41,7 +41,7 @@ public class Attach {
 	public void setHorizontal(Orientation horizontal) {
 		this.horizontal = horizontal;
 	}
-	
+
 	public Orientation getVertical() {
 		return vertical;
 	}
@@ -66,20 +66,26 @@ public class Attach {
 		this.ha = ha;
 	}
 
-	public static Attach fromString(String value){
+	/**
+	 * parses supplied String and extracts Attach-Data
+	 * 
+	 * @param value
+	 *            supplied ini-line-string-value
+	 * @return Attach containing supplied data
+	 */
+	public static Attach fromString(String value) {
 		Attach att = null;
-		if(value.contains(Attach.KEY)){
+		if (value.contains(Attach.KEY)) {
 			att = new Attach();
-			
+
 			int start = value.indexOf(Attach.KEY + "=") + Attach.KEY.length() + 2;
 			int end = value.indexOf(")", start);
 			String cut = value.substring(start, end);
 			log.debug(String.format("startpos: %s, endpos: %s, substring: %s", start, end, cut));
-			
-		
+
 			String[] split = cut.split(",");
 
-			if(null != split && split.length > 0){
+			if (null != split && split.length > 0) {
 				for (String string : split) {
 					String part = string.trim();
 					String k = part.split("=")[0];
@@ -92,23 +98,23 @@ public class Attach {
 					case Attach.KEY_VERTICAL:
 						att.setVertical(Orientation.fromString(v));
 						break;
-						
+
 					case Attach.KEY_HA:
-						if(v.startsWith("\""))
+						if (v.startsWith("\""))
 							v = v.substring(1, v.length());
-						if(v.endsWith("\""))
-							v = v.substring(0, v.length()-1);
+						if (v.endsWith("\""))
+							v = v.substring(0, v.length() - 1);
 						att.setHa(v);
 						break;
-						
+
 					case Attach.KEY_VA:
-						if(v.startsWith("\""))
+						if (v.startsWith("\""))
 							v = v.substring(1, v.length());
-						if(v.endsWith("\""))
-							v = v.substring(0, v.length()-1);
+						if (v.endsWith("\""))
+							v = v.substring(0, v.length() - 1);
 						att.setVa(v);
 						break;
-						
+
 					default:
 						break;
 					}
@@ -117,7 +123,7 @@ public class Attach {
 		}
 		return att;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

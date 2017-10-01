@@ -44,6 +44,11 @@ public class ShadowOffset {
 		this.y = y;
 	}
 
+	/**
+	 * parses supplied String and extracts ShadowOffset-Data
+	 * @param value supplied ini-line-string-value
+	 * @return ShadowOffset containing supplied data
+	 */
 	public static ShadowOffset fromString(String value){
 		ShadowOffset sh = null;
 		if(value.contains(ShadowOffset.KEY)){
